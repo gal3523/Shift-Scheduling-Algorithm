@@ -1,61 +1,49 @@
-import pandas as pd
-import numpy as np
+# Shift Scheduling Algorithm
 
-#  Data setup
+A Python-based automation tool designed to optimize employee shift assignments. This project solves the problem of manual scheduling by generating a fair, constraint-based weekly roster and exporting the results to Excel.
 
-days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"]
+##  Overview
+Managing shift schedules manually is time-consuming and prone to errors. This algorithm automates the process by considering:
+* **Employee Availability:** Ensures employees are only assigned to days they can work.
+* **Workload Balancing:** Enforces a maximum number of shifts per employee to prevent burnout.
+* **Randomized Fairness:** Uses statistical randomization to distribute shifts among eligible candidates.
 
-#  (1 = Available, 0 = Unavailable)
+##  Tech Stack
+* **Python 3.x**
+* **Pandas:** For efficient data manipulation and DataFrame management.
+* **NumPy:** For vectorized operations and random selection logic.
+* **OpenPyXL:** For exporting the final schedule to an Excel report.
 
-data = {
-    'Danny': [1, 1, 0, 1, 1],
-    'Sarah': [1, 0, 1, 0, 1],
-    'Yossi': [0, 1, 0, 1, 1],
-    'Noa': [1, 1, 1, 1, 0],
-    'Amit': [0, 0, 1, 1, 1]
-}
+##  How It Works
+1.  **Input Data:** The script initializes an availability matrix (Days vs. Employees).
+2.  **Processing:** It iterates through each required shift, filtering available candidates based on constraints.
+3.  **Selection:** A candidate is selected using a randomized approach to ensure fairness.
+4.  **Output:** The final schedule is displayed in the console and saved automatically as `weekly_schedule.xlsx`.
 
-# Index = Days, Columns = Employees
-df_availability = pd.DataFrame(data, index=days)
+##  Installation & Usage
 
-print(df_availability)
+1.  **Clone the repository** (or download the script):
+    ```bash
+    git clone [https://github.com/your-username/shift-scheduling-algorithm.git](https://github.com/your-username/shift-scheduling-algorithm.git)
+    ```
 
+2.  **Install dependencies:**
+    ```bash
+    pip install pandas numpy openpyxl
+    ```
 
-MAX_SHIFTS = 3
+3.  **Run the script:**
+    ```bash
+    python scheduler.py
+    ```
 
-schedule_results = []
-shifts_count = pd.Series(0, index=df_availability.columns)
+4.  **Check the output:**
+    Open the generated `weekly_schedule.xlsx` file to see the results.
 
-for day in df_availability.index:
-    current_day_row = df_availability.loc[day]
-    available_workers = current_day_row[current_day_row == 1].index.tolist()
-    valid_candidates = [w for w in available_workers if shifts_count[w] < MAX_SHIFTS]
+##  Future Improvements
+* Load employee data directly from an external CSV/Excel file.
+* Add a Graphical User Interface (GUI) for non-technical users.
+* Implement more complex constraints (e.g., minimum rest time between shifts).
 
-    selected_worker = None
-
-    if len(valid_candidates) > 0:
-        selected_worker = np.random.choice(valid_candidates)
-        shifts_count[selected_worker] += 1
-    else:
-        selected_worker = "--- No Candidate ---"
-
-    schedule_results.append({
-        'Day': day,
-        'Assigned Employee': selected_worker
-    })
-
-
-df_schedule = pd.DataFrame(schedule_results)
-
-print("=== Final Weekly Schedule ===")
-print(df_schedule)
-print("\n=== Workload Check ===")
-print(shifts_count)
-
-output_filename = 'weekly_schedule.xlsx'
-df_schedule.to_excel(output_filename, index=False)
-
-print(f"\n[SUCCESS] Schedule saved to '{output_filename}' successfully!")
-
-
-
+---
+*Created by [Your Name]*
