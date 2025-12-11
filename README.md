@@ -46,4 +46,4 @@ Managing shift schedules manually is time-consuming and prone to errors. This al
 * Implement more complex constraints (e.g., minimum rest time between shifts).
 
 ---
-*Created by [Your Name]*
+*Created by Gal Shalom*
